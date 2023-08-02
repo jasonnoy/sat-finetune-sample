@@ -147,7 +147,7 @@ if __name__ == '__main__':
     args = get_args(args_list)
     args = argparse.Namespace(**vars(args), **vars(known))
 
-    model_type = '/nxchinamobile2/shared/official_pretrains/sat_home/glm2-6b'
+    model_type = '/gpfs/gpfs1/zphz/official_pretrains/sat/glm2-6b'
     # model_type = 'chatglm2-6b'
     model, args = FineTuneModel.from_pretrained(model_type, args)
     from transformers import AutoTokenizer

@@ -25,8 +25,8 @@ export NCCL_IB_DISABLE=0
 export NCCL_IB_HCA=mlx5_0,mlx5_2
 export NCCL_SOCKET_IFNAME=bond0
 export NCCL_DEBUG=INFO
-export HF_HOME=/gpfs/gpfs1/zphz/hf_home
-export SAT_HOME=/gpfs/gpfs1/zphz/sat_home
+export HF_HOME=/gpfs/gpfs1/zphz/official_pretrains/hugging_face
+export SAT_HOME=/gpfs/gpfs1/zphz/official_pretrains/sat
 #export LD_LIBRARY_PATH=/data/apps/source/nccl/build/lib/:$LD_LIBRARY_PATH
 
 # python pseudo_training.py --world_size $WORLD_SIZE --rank $RANK --master_addr $MASTER_ADDR --master_port $MASTER_PORT --local_rank $LOCAL_RANK
@@ -37,12 +37,12 @@ main_dir=$(dirname $script_dir)
 
 echo ${main_dir}
 
-train_data="/nxchinamobile2/shared/jjh/projects/ftsample/wukong-laion-combine.re-caption-10000-class.jsonl"
+train_data="/gpfs/gpfs1/zphz/jjh/projects/sat-finetune-sample/train.jsonl"
 gpt_options=" \
        --experiment-name finetune-chatglm2-6b \
        --model-parallel-size 1 \
        --mode finetune \
-       --train-iters 6000 \
+       --train-iters 10 \
        --resume-dataloader \
        --max_source_length 64 \
        --max_target_length 64 \
@@ -50,8 +50,8 @@ gpt_options=" \
        --distributed-backend nccl \
        --lr-decay-style cosine \
        --warmup .02 \
-       --save-interval 1000 \
-       --eval-interval 3000 \
+       --save-interval 1 \
+       --eval-interval 1 \
        --save ./checkpoints \
        --split 98,1,1 \
        --eval-iters 1 \
