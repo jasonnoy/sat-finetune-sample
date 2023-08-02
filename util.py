@@ -1,4 +1,5 @@
 import json
+from tqdm import tqdm
 import os
 
 
@@ -7,7 +8,7 @@ if __name__ == "__main__":
     output_path = "/gpfs/gpfs1/zphz/jjh/projects/sat-finetune-sample/train.jsonl"
     with open(input_path, "r", encoding='utf-8') as f1, open(output_path, "w", encoding='utf-8') as f2:
         datas = json.load(f1)
-        for data in datas:
+        for data in tqdm(datas):
             prompt = data['translation.en']
             response = data['translation.cn']
             f2.write(json.dumps({'prompt': prompt, 'response': response}, ensure_ascii=False) + '\n')
