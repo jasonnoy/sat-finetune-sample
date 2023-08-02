@@ -42,7 +42,7 @@ gpt_options=" \
        --experiment-name finetune-chatglm2-6b \
        --model-parallel-size 1 \
        --mode finetune \
-       --train-iters 10 \
+       --train-iters 6000 \
        --resume-dataloader \
        --max_source_length 64 \
        --max_target_length 64 \
@@ -50,8 +50,8 @@ gpt_options=" \
        --distributed-backend nccl \
        --lr-decay-style cosine \
        --warmup .02 \
-       --save-interval 1 \
-       --eval-interval 1 \
+       --save-interval 1000 \
+       --eval-interval 1000 \
        --save ./checkpoints \
        --split 98,1,1 \
        --eval-iters 1 \
