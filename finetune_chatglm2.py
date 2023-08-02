@@ -151,7 +151,7 @@ if __name__ == '__main__':
     # model_type = 'chatglm2-6b'
     model, args = FineTuneModel.from_pretrained(model_type, args)
     from transformers import AutoTokenizer
-    tokenizer = AutoTokenizer.from_pretrained('/gpfs/gpfs1/zphz/official_pretrains/hugging_face/chatglm2-6b', trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained('THUDM/chatglm2-6b', trust_remote_code=True)
     get_tokenizer(outer_tokenizer=tokenizer)
     label_pad_token_id = -100 if args.ignore_pad_token_for_loss else tokenizer.pad_token_id
     data_collator = DataCollatorForSeq2Seq(
