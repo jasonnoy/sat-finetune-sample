@@ -94,46 +94,35 @@ def forward_step(data_iterator, model, args, timers):
 def create_dataset_function(path, args):
     tokenizer = get_tokenizer()
 
-    def get_example_input(prefix, max_seq_length, model_inputs, query, answer):
-        prompt = tokenizer.build_prompt(query, None)  # [Round 1]\n\n问：{query}\n\n答：
-        prompt = prefix + prompt
-        a_ids = tokenizer.encode(text=prompt, add_special_tokens=True, truncation=True,
-                                 max_length=args.max_source_length)
-        b_ids = tokenizer.encode(text=answer, add_special_tokens=False, truncation=True,
-                                 max_length=args.max_target_length)
-
-        context_length = len(a_ids)
-        input_ids = a_ids + b_ids + [tokenizer.eos_token_id]
-        labels = [tokenizer.pad_token_id] * context_length + b_ids + [tokenizer.eos_token_id]
-
-        pad_len = max_seq_length - len(input_ids)
-        input_ids = input_ids + [tokenizer.pad_token_id] * pad_len
-        labels = labels + [tokenizer.pad_token_id] * pad_len
-        if args.ignore_pad_token_for_loss:
-            labels = [(l if l != tokenizer.pad_token_id else -100) for l in labels]
-
-        ret = {}
-        ret["input_ids"] = input_ids
-        ret["labels"] = labels
-        model_inputs.append(ret)
 
     def preprocess_function_train(examples):
         max_seq_length = args.max_source_length + args.max_target_length + 2
         prefix = args.source_prefix if args.source_prefix is not None else ""
 
         model_inputs = []
-        process_list = []
-        worker_num = args.num_workers
 
         for i in range(len(examples)):
             query, answer = examples[i]['prompt'], examples[i]['response']
-            p = Process(target=create_dataset_function, args=(prefix, max_seq_length, model_inputs, query, answer))
-            p.start()
-            process_list.append(p)
-            if len(process_list) >= worker_num:
-                for p in process_list:
-                    p.join()
-                process_list = []
+            prompt = tokenizer.build_prompt(query, None)  # [Round 1]\n\n问：{query}\n\n答：
+            prompt = prefix + prompt
+            a_ids = tokenizer.encode(text=prompt, add_special_tokens=True, truncation=True,
+                                     max_length=args.max_source_length)
+            b_ids = tokenizer.encode(text=answer, add_special_tokens=False, truncation=True,
+                                     max_length=args.max_target_length)
+
+            context_length = len(a_ids)
+            input_ids = a_ids + b_ids + [tokenizer.eos_token_id]
+            labels = [tokenizer.pad_token_id] * context_length + b_ids + [tokenizer.eos_token_id]
+
+            pad_len = max_seq_length - len(input_ids)
+            input_ids = input_ids + [tokenizer.pad_token_id] * pad_len
+            labels = labels + [tokenizer.pad_token_id] * pad_len
+            if args.ignore_pad_token_for_loss:
+                labels = [(l if l != tokenizer.pad_token_id else -100) for l in labels]
+            ret = {}
+            ret["input_ids"] = input_ids
+            ret["labels"] = labels
+            model_inputs.append(ret)
 
         return model_inputs
     
