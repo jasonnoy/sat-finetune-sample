@@ -44,13 +44,13 @@ gpt_options=" \
        --mode finetune \
        --train-iters 6000 \
        --resume-dataloader \
-       --max_source_length 64 \
-       --max_target_length 64 \
+       --max_source_length 1000 \
+       --max_target_length 1000 \
        --train-data ${train_data} \
        --distributed-backend nccl \
        --lr-decay-style cosine \
        --warmup .02 \
-       --save-interval 1000 \
+       --save-interval 2000 \
        --eval-interval 1000 \
        --save ./checkpoints \
        --split 98,1,1 \

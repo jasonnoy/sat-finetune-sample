@@ -147,10 +147,10 @@ if __name__ == '__main__':
     args = get_args(args_list)
     args = argparse.Namespace(**vars(args), **vars(known))
 
-    # model_type = '/nxchinamobile2/shared/official_pretrains/sat_home/glm2-6b'
-    checkpoint = "/nxchinamobile2/shared/jjh/projects/sat-finetune-sample/checkpoints/finetune-chatglm2-6b-08-02-19-08"
+    model_type = '/nxchinamobile2/shared/official_pretrains/sat_home/glm2-6b'
+    # checkpoint = "/nxchinamobile2/shared/jjh/projects/sat-finetune-sample/checkpoints/finetune-chatglm2-6b-08-02-19-08"
     # model_type = 'chatglm2-6b'
-    model, args = FineTuneModel.from_pretrained(checkpoint, args)
+    model, args = FineTuneModel.from_pretrained(model_type, args)
     from transformers import AutoTokenizer
     tokenizer = AutoTokenizer.from_pretrained('THUDM/chatglm2-6b', trust_remote_code=True)
     get_tokenizer(outer_tokenizer=tokenizer)
