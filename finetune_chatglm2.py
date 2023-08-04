@@ -142,7 +142,6 @@ if __name__ == '__main__':
     py_parser = argparse.ArgumentParser(add_help=False)
     py_parser.add_argument('--max_source_length', type=int)
     py_parser.add_argument('--max_target_length', type=int)
-    py_parser.add_argument('--num_workers', type=int)
     py_parser.add_argument('--ignore_pad_token_for_loss', type=bool, default=True)
     py_parser.add_argument('--source_prefix', type=str, default="")
     py_parser = FineTuneModel.add_model_specific_args(py_parser)

@@ -44,8 +44,8 @@ gpt_options=" \
        --mode finetune \
        --train-iters 6000 \
        --resume-dataloader \
-       --max_source_length 1000 \
-       --max_target_length 1000 \
+       --max_source_length 200 \
+       --max_target_length 200 \
        --train-data ${train_data} \
        --distributed-backend nccl \
        --lr-decay-style cosine \
