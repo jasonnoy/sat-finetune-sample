@@ -37,7 +37,7 @@ main_dir=$(dirname $script_dir)
 
 echo ${main_dir}
 
-train_data="/nxchinamobile2/shared/jjh/projects/sat-finetune-sample/train.jsonl"
+train_data="/nxchinamobile2/shared/jjh/projects/sat-finetune-sample/train_100k.jsonl"
 gpt_options=" \
        --experiment-name finetune-chatglm2-6b \
        --model-parallel-size 1 \
