@@ -162,6 +162,6 @@ if __name__ == '__main__':
         model=model,
         label_pad_token_id=label_pad_token_id,
         pad_to_multiple_of=None,
-        padding=False
+        padding=True
     )
     training_main(args, model_cls=model, forward_step_function=forward_step, create_dataset_function=create_dataset_function, collate_fn=data_collator)
