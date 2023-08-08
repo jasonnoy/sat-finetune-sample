@@ -40,7 +40,7 @@ echo ${main_dir}
 train_data="/nxchinamobile2/shared/jjh/projects/sat-finetune-sample/mix_combine_zh.jsonl"
 gpt_options=" \
        --experiment-name finetune-chatglm2-6b \
-       --model-parallel-size 1 \
+       --model-parallel-size 2 \
        --mode finetune \
        --train-iters 1000 \
        --resume-dataloader \
