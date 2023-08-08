@@ -26,7 +26,7 @@ if __name__ == "__main__":
                 break
     f.close()
     df = {"key": keys, "prompt": prompts, "txt": texts}
-    df = pd.DataFrame(df, dtype={"key": str})
+    df = pd.DataFrame(df, dtype=str)
     df = df.sort_values(by='key')
     df.to_csv("./chat_sat_zh_50.csv", index=False, encoding="utf-8")
 
