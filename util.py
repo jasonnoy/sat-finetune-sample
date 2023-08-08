@@ -9,13 +9,14 @@ if __name__ == "__main__":
     texts = []
     details = []
     keys = []
-    df = pd.read_csv("sat_zh_50.csv")
-    test_ids = df['key']
-    print(test_ids)
+    df = pd.read_csv("sat_zh_50.csv", dtype={"key": str})
+    test_ids = df['key'].tolist()
     with open("/nxchinamobile2/shared/wy/data/input/rankv3_short_new.jsonl", "r", encoding="utf-8") as f:
         count = 0
         for i, line in enumerate(f):
             data = json.loads(line)
+            if data["__key__"] not in test_ids:
+                continue
             prompts.append(data["prompt_en"])
             texts.append(data["txt_en"])
             # details.append(data["details_en"])
