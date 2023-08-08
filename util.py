@@ -25,7 +25,7 @@ if __name__ == "__main__":
             if count == 50:
                 break
     f.close()
-    df = {"key": keys, "prompt": prompts, "txt": texts, "details": details}
+    df = {"key": keys, "prompt": prompts, "txt": texts}
     df = pd.DataFrame(df)
     df = df.sort_values(by='key')
     df.to_csv("./chat_sat_zh_50.csv", index=False, encoding="utf-8")
