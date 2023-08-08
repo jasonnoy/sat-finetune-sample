@@ -51,3 +51,11 @@ if __name__ == "__main__":
             f2.write(json.dumps({'prompt': data['txt'], 'response': data['txt_en']}, ensure_ascii=False) + "\n")
     f1.close()
     f2.close()
+
+    with open("mix_combine_zh.jsonl", 'r', encoding='utf-8') as f1, open("shuffle_combine_zh.jsonl", 'a', encoding='utf-8') as f2:
+        datas = [json.loads(line) for line in f1]
+        random.shuffle(datas)
+        for data in datas:
+            f2.write(json.dumps(data, ensure_ascii=False) + "\n")
+    f1.close()
+    f2.close()
