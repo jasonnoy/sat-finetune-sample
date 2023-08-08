@@ -37,15 +37,15 @@ main_dir=$(dirname $script_dir)
 
 echo ${main_dir}
 
-train_data="/nxchinamobile2/shared/jjh/projects/sat-finetune-sample/translate.jsonl"
+train_data="/nxchinamobile2/shared/jjh/projects/sat-finetune-sample/mix_combine_zh.jsonl"
 gpt_options=" \
        --experiment-name finetune-chatglm2-6b \
        --model-parallel-size 1 \
        --mode finetune \
        --train-iters 1000 \
        --resume-dataloader \
-       --max_source_length 200 \
-       --max_target_length 200 \
+       --max_source_length 500 \
+       --max_target_length 500 \
        --train-data ${train_data} \
        --distributed-backend nccl \
        --lr-decay-style cosine \
