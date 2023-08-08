@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --output=ftcleaner_%j.out
 #SBATCH --error=ftcleaner_%j.err
-#SBATCH --nodes=2
+#SBATCH --nodes=4
 #SBATCH --ntasks-per-node=8
 #SBATCH --cpus-per-task=8
 #SBATCH --partition=dev
