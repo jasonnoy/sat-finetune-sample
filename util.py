@@ -32,9 +32,9 @@ if __name__ == "__main__":
         response = ""
         for line in f1:
             data = json.loads(line)
-            if prompt != "" and random.random() < p:
-                prompt += " "+data["prompt"]
-                response += " "+data["response"]
+            prompt += " " + data["prompt"]
+            response += " " + data["response"]
+            if random.random() < p:  # concat the next sentence
                 continue
             f2.write(json.dumps({"prompt": prompt, "response": response}, ensure_ascii=False) + "\n")
             prompt = ""
