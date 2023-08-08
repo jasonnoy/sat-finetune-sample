@@ -9,13 +9,21 @@ if __name__ == "__main__":
     texts = []
     details = []
     keys = []
+    df = pd.read_csv("sat_zh_50.csv")
+    test_ids = df['key'].to_list()
     with open("/nxchinamobile2/shared/wy/data/input/rankv3_short_new.jsonl", "r", encoding="utf-8") as f:
+        count = 0
         for i, line in enumerate(f):
+            if data['__key__'] in test_ids or data['status'] != 'success':
+                continue
             data = json.loads(line)
             prompts.append(data["prompt_en"])
             texts.append(data["txt_en"])
             # details.append(data["details_en"])
             keys.append(data["__key__"])
+            count += 1
+            if count == 50:
+                break
     f.close()
     df = {"key": keys, "prompt": prompts, "txt": texts, "details": details}
     df = pd.DataFrame(df)
