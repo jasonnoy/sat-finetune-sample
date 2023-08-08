@@ -47,7 +47,7 @@ if __name__ == "__main__":
             data = json.loads(line)
             if data['__key__'] in test_ids or data['status'] != 'success':
                 continue
-            f2.write(json.dumps({'prompt': data['prompt'], 'response': data['prompt_en']}))
-            f2.write(json.dumps({'prompt': data['txt'], 'response': data['txt_en']}))
+            f2.write(json.dumps({'prompt': data['prompt'], 'response': data['prompt_en']}, ensure_ascii=False) + "\n")
+            f2.write(json.dumps({'prompt': data['txt'], 'response': data['txt_en']}, ensure_ascii=False) + "\n")
     f1.close()
     f2.close()
