@@ -59,7 +59,7 @@ if __name__ == "__main__":
     # model, model_args = ChatGLM2Model.from_pretrained('/nxchinamobile2/shared/dm/snapbatches/1690296760278/checkpoints/finetune-chatglm2-6b-07-25-22-53',
     # model, model_args = ChatGLM2Model.from_pretrained('/nxchinamobile2/shared/jjh/projects/ftsample/checkpoints/finetune-chatglm2-6b-07-27-10-19',
     # model, model_args = ChatGLM2Model.from_pretrained('/nxchinamobile2/shared/jjh/projects/ftsample/checkpoints/finetune-chatglm2-6b-07-28-10-26',
-    model, model_args = ChatGLM2Model.from_pretrained('/nxchinamobile2/shared/jjh/projects/sat-finetune-sample/checkpoints/finetune-chatglm2-6b-08-07-19-39',
+    model, model_args = ChatGLM2Model.from_pretrained('/nxchinamobile2/shared/jjh/projects/sat-finetune-sample/checkpoints/finetune-chatglm2-6b-08-08-10-44',
     args=argparse.Namespace(
         fp16=True,
         skip_init=True,
@@ -76,11 +76,17 @@ if __name__ == "__main__":
     with open(input_path, 'r', encoding='utf-8') as f1, open(output_path, 'w', encoding='utf-8') as f2:
         for i, line in enumerate(tqdm(f1)):
             data = json.loads(line)
+            print("prompt:", data['prompt'])
             data['prompt'] = chat_response(data['prompt'], model, tokenizer, max_length=args.max_length, num_beams=args.num_beams, top_p=args.top_p, temperature=args.temperature, top_k=args.top_k)
+            print('prompt:', data['prompt'])
+            print('txt:', data['txt'])
             data['txt'] = chat_response(data['txt'], model, tokenizer, max_length=args.max_length, num_beams=args.num_beams, top_p=args.top_p, temperature=args.temperature, top_k=args.top_k)
+            print('txt:', data['txt'])
+            print('details:', data['details'])
             data['details'] = chat_response(data['details'], model, tokenizer, max_length=args.max_length, num_beams=args.num_beams, top_p=args.top_p, temperature=args.temperature, top_k=args.top_k)
+            print('details:', data['details'])
             f2.write(json.dumps(data, ensure_ascii=False) + '\n')
-            if i == 100:
+            if i == 50:
                 break
     f1.close()
     f2.close()
