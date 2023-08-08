@@ -18,6 +18,6 @@ if __name__ == "__main__":
             if i == 50:
                 break
     f.close()
-    df = {"prompt": prompts, "txt": texts, "details": details}
+    df = {"key": keys, "prompt": prompts, "txt": texts, "details": details}
     df = pd.DataFrame(df)
     df.to_csv("./sat_zh_50.csv", index=False, encoding="utf-8")
