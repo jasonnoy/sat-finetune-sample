@@ -15,8 +15,6 @@ if __name__ == "__main__":
         count = 0
         for i, line in enumerate(f):
             data = json.loads(line)
-            if data['__key__'] not in test_ids or data['status'] != 'success':
-                continue
             prompts.append(data["prompt_en"])
             texts.append(data["txt_en"])
             # details.append(data["details_en"])
