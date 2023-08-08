@@ -26,13 +26,13 @@ import pandas as pd
 if __name__ == "__main__":
     df = pd.read_csv("sat_zh_50.csv")
     test_ids = df['key'].to_list()
-    p = 0.6
+    p = 0.75
     with open("train_zh_100k.jsonl", 'r', encoding='utf-8') as f1, open("mix_combine_zh.jsonl", 'w', encoding='utf-8') as f2:
         prompt = ""
         response = ""
         for line in f1:
             data = json.loads(line)
-            if random.random() < p:
+            if prompt != "" and random.random() < p:
                 prompt += " "+data["prompt"]
                 response += " "+data["response"]
                 continue
