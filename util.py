@@ -14,7 +14,7 @@ if __name__ == "__main__":
             data = json.loads(line)
             prompts.append(data["prompt_en"])
             texts.append(data["txt_en"])
-            details.append(data["details_en"])
+            # details.append(data["details_en"])
             keys.append(data["__key__"])
     f.close()
     df = {"key": keys, "prompt": prompts, "txt": texts, "details": details}
