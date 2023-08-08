@@ -7,13 +7,15 @@ if __name__ == "__main__":
     prompts = []
     texts = []
     details = []
-    with open("./sat_zh_2_cn_50.jsonl", "r", encoding="utf-8") as f:
-        for line in f:
+    with open("/nxchinamobile2/shared/img_datasets/cleaned_instructions/image_caption/diy_caption_v1/meta.jsonl", "r", encoding="utf-8") as f:
+        for i, line in enumerate(f):
             data = json.loads(line)
             prompts.append(data["prompt"])
             texts.append(data["txt"])
             details.append(data["details"])
+            if i == 50:
+                break
     f.close()
     df = {"prompt": prompts, "txt": texts, "details": details}
     df = pd.DataFrame(df)
-    df.to_csv("./sat_zh_2_cn_50.csv", index=False, encoding="utf-8")
+    df.to_csv("./sat_zh_50.csv", index=False, encoding="utf-8")
