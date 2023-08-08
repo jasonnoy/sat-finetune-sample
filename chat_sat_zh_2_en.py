@@ -76,15 +76,10 @@ if __name__ == "__main__":
     with open(input_path, 'r', encoding='utf-8') as f1, open(output_path, 'w', encoding='utf-8') as f2:
         for i, line in enumerate(tqdm(f1)):
             data = json.loads(line)
-            print("prompt:", data['prompt'])
-            data['prompt'] = chat_response(data['prompt'], model, tokenizer, max_length=args.max_length, num_beams=args.num_beams, top_p=args.top_p, temperature=args.temperature, top_k=args.top_k)
-            print('prompt:', data['prompt'])
-            print('txt:', data['txt'])
-            data['txt'] = chat_response(data['txt'], model, tokenizer, max_length=args.max_length, num_beams=args.num_beams, top_p=args.top_p, temperature=args.temperature, top_k=args.top_k)
-            print('txt:', data['txt'])
-            print('details:', data['details'])
-            data['details'] = chat_response(data['details'], model, tokenizer, max_length=args.max_length, num_beams=args.num_beams, top_p=args.top_p, temperature=args.temperature, top_k=args.top_k)
-            print('details:', data['details'])
+            data['prompt'] = chat_response(data['prompt'], model, tokenizer, max_length=args.max_length, num_beams=args.num_beams, top_p=args.top_p, temperature=args.temperature, top_k=args.top_k).split(sep="答：")[-1]
+            print(data['prompt'])
+            data['txt'] = chat_response(data['txt'], model, tokenizer, max_length=args.max_length, num_beams=args.num_beams, top_p=args.top_p, temperature=args.temperature, top_k=args.top_k).split(sep="答：")[-1]
+            data['details'] = chat_response(data['details'], model, tokenizer, max_length=args.max_length, num_beams=args.num_beams, top_p=args.top_p, temperature=args.temperature, top_k=args.top_k).split(sep="答：")[-1]
             f2.write(json.dumps(data, ensure_ascii=False) + '\n')
             if i == 50:
                 break
