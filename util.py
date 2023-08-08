@@ -14,9 +14,9 @@ if __name__ == "__main__":
     with open("/nxchinamobile2/shared/wy/data/input/rankv3_short_new.jsonl", "r", encoding="utf-8") as f:
         count = 0
         for i, line in enumerate(f):
+            data = json.loads(line)
             if data['__key__'] in test_ids or data['status'] != 'success':
                 continue
-            data = json.loads(line)
             prompts.append(data["prompt_en"])
             texts.append(data["txt_en"])
             # details.append(data["details_en"])
