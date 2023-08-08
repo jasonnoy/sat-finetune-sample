@@ -11,6 +11,7 @@ if __name__ == "__main__":
     keys = []
     df = pd.read_csv("sat_zh_50.csv")
     test_ids = df['key'].to_list()
+    print(test_ids)
     with open("/nxchinamobile2/shared/wy/data/input/rankv3_short_new.jsonl", "r", encoding="utf-8") as f:
         count = 0
         for i, line in enumerate(f):
