@@ -12,8 +12,8 @@ if __name__ == "__main__":
         for i, line in enumerate(f):
             data = json.loads(line)
             prompts.append(data["prompt"])
-            texts.append(data["txt"])
-            details.append(data["details"])
+            texts.append(data["txt"].replace(".   .", "."))
+            details.append(data["details"].replace(".   .", "."))
             keys.append(data["__key__"])
     f.close()
     df = {"key": keys, "prompt": prompts, "txt": texts, "details": details}
