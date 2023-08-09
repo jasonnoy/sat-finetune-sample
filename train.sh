@@ -58,7 +58,7 @@ gpt_options=" \
        --eval-batch-size 8 \
        --zero-stage 1 \
        --lr 0.00004 \
-       --batch-size 10 \
+       --batch-size 12 \
        --skip-init \
        --fp16 \
        --block-size 128
