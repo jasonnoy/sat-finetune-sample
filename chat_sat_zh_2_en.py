@@ -41,6 +41,28 @@ def chat_response(query, model, tokenizer,
     return response
 
 
+def split_translate(query, model, tokenizer, max_length: int = 256, num_beams=1, top_p=0.7, top_k=0, temperature=0.95):
+    if len(query) < 15:
+        return chat_response(query, model, tokenizer, max_length, num_beams, top_p, top_k, temperature).split(sep="答：")[-1]
+    res_query = ""
+    for sent in query.split('。'):
+        res_sent = ""
+        cur_sent = ""
+        for sub_sent in sent.split('，'):
+            cur_sent += sub_sent+"，"
+            if len(cur_sent) >= 50:
+                cur_trans = chat_response(cur_sent, model, tokenizer, max_length, num_beams, top_p, top_k, temperature).split(sep="答：")[-1]
+                res_sent += cur_trans.rstrip(",.?!")+","
+                cur_sent = ""
+        if cur_sent != "":
+            cur_trans = chat_response(cur_sent, model, tokenizer, max_length, num_beams, top_p, top_k, temperature).split(sep="答：")[-1]
+            res_sent += cur_trans
+        res_sent = res_sent.rstrip(",.?!")+"."
+        res_query += res_sent+" "
+    res_query = res_query.strip()
+    return res_query
+
+
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
@@ -77,9 +99,12 @@ if __name__ == "__main__":
         for i, line in enumerate(tqdm(f1)):
             data = json.loads(line)
             data['prompt'] = chat_response(data['prompt'], model, tokenizer, max_length=args.max_length, num_beams=args.num_beams, top_p=args.top_p, temperature=args.temperature, top_k=args.top_k).split(sep="答：")[-1]
-            print(data['prompt'])
-            data['txt'] = chat_response(data['txt'], model, tokenizer, max_length=args.max_length, num_beams=args.num_beams, top_p=args.top_p, temperature=args.temperature, top_k=args.top_k).split(sep="答：")[-1]
-            data['details'] = chat_response(data['details'], model, tokenizer, max_length=args.max_length, num_beams=args.num_beams, top_p=args.top_p, temperature=args.temperature, top_k=args.top_k).split(sep="答：")[-1]
+            # print(data['prompt'])
+            # data['txt'] = chat_response(data['txt'], model, tokenizer, max_length=args.max_length, num_beams=args.num_beams, top_p=args.top_p, temperature=args.temperature, top_k=args.top_k).split(sep="答：")[-1]
+            data['txt'] = split_translate(data['txt'], model, tokenizer, max_length=args.max_length, num_beams=args.num_beams, top_p=args.top_p, temperature=args.temperature, top_k=args.top_k)
+            # data['details'] = chat_response(data['details'], model, tokenizer, max_length=args.max_length, num_beams=args.num_beams, top_p=args.top_p, temperature=args.temperature, top_k=args.top_k).split(sep="答：")[-1]
+            data['details'] = split_translate(data['details'], model, tokenizer, max_length=args.max_length, num_beams=args.num_beams, top_p=args.top_p, temperature=args.temperature, top_k=args.top_k)
+
             f2.write(json.dumps(data, ensure_ascii=False) + '\n')
             if i == 50:
                 break
