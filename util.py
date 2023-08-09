@@ -28,7 +28,7 @@ if __name__ == "__main__":
     texts = []
     details = []
     keys = []
-    df = pd.read_csv("sat_zh_100.csv", dtype={"key": str})
+    df = pd.read_csv("sat_zh_50.csv", dtype={"key": str})
     test_ids = df['key'].tolist()
     with open("/nxchinamobile2/shared/wy/data/input/rankv3_short_new.jsonl", "r", encoding="utf-8") as f:
         count = 0
