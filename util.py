@@ -2,52 +2,52 @@ import json
 import random
 import pandas as pd
 
-if __name__ == "__main__":
-    # 读取jsonl文件
-    prompts = []
-    texts = []
-    details = []
-    keys = []
-    with open("sat_zh_2_cn_100.jsonl", "r", encoding="utf-8") as f:
-        for i, line in enumerate(f):
-            data = json.loads(line)
-            prompts.append(data["prompt"])
-            texts.append(data["txt"].replace(".   .", "."))
-            details.append(data["details"].replace(".   .", "."))
-            keys.append(data["__key__"])
-    f.close()
-    df = {"key": keys, "prompt": prompts, "txt": texts, "details": details}
-    df = pd.DataFrame(df, dtype=str)
-    df = df.sort_values(by='key')
-    df.to_csv("./chat_sat_zh_50.csv", index=False, encoding="utf-8")
-
-
 # if __name__ == "__main__":
 #     # 读取jsonl文件
 #     prompts = []
 #     texts = []
 #     details = []
 #     keys = []
-#     df = pd.read_csv("sat_zh_100.csv", dtype={"key": str})
-#     test_ids = df['key'].tolist()
-#     with open("/nxchinamobile2/shared/wy/data/input/rankv3_short_new.jsonl", "r", encoding="utf-8") as f:
-#         count = 0
+#     with open("sat_zh_2_cn_100.jsonl", "r", encoding="utf-8") as f:
 #         for i, line in enumerate(f):
 #             data = json.loads(line)
-#             if data["__key__"] not in test_ids:
-#                 continue
-#             prompts.append(data["prompt_en"])
-#             texts.append(data["txt_en"])
-#             # details.append(data["details_en"])
+#             prompts.append(data["prompt"])
+#             texts.append(data["txt"].replace(".   .", "."))
+#             details.append(data["details"].replace(".   .", "."))
 #             keys.append(data["__key__"])
-#             count += 1
-#             if count == 50:
-#                 break
 #     f.close()
-#     df = {"key": keys, "prompt": prompts, "txt": texts}
+#     df = {"key": keys, "prompt": prompts, "txt": texts, "details": details}
 #     df = pd.DataFrame(df, dtype=str)
 #     df = df.sort_values(by='key')
 #     df.to_csv("./chat_sat_zh_50.csv", index=False, encoding="utf-8")
+
+
+if __name__ == "__main__":
+    # 读取jsonl文件
+    prompts = []
+    texts = []
+    details = []
+    keys = []
+    df = pd.read_csv("sat_zh_100.csv", dtype={"key": str})
+    test_ids = df['key'].tolist()
+    with open("/nxchinamobile2/shared/wy/data/input/rankv3_short_new.jsonl", "r", encoding="utf-8") as f:
+        count = 0
+        for i, line in enumerate(f):
+            data = json.loads(line)
+            if data["__key__"] not in test_ids:
+                continue
+            prompts.append(data["prompt"])
+            texts.append(data["txt"])
+            # details.append(data["details_en"])
+            keys.append(data["__key__"])
+            count += 1
+            if count == 50:
+                break
+    f.close()
+    df = {"key": keys, "prompt": prompts, "txt": texts}
+    df = pd.DataFrame(df, dtype=str)
+    df = df.sort_values(by='key')
+    df.to_csv("./chat_sat_zh_cn_50.csv", index=False, encoding="utf-8")
 
 # if __name__ == "__main__":
 #     df = pd.read_csv("sat_zh_50.csv", dtype={"key": str})
