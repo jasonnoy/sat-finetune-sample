@@ -73,6 +73,7 @@ def infer(inputs, model, tokenizer, num_beams=1, top_p=0.7, temperature=0.95, ba
     #         strategy=strategy
     #     )[0]
     for output in outputs:
+        print(output)
         response = tokenizer.decode(output.cpu()[0])
         response = response.split("\n\n答：")[1]
         output_list.append(response)
