@@ -2,12 +2,12 @@
 #SBATCH --job-name=translate_COYO
 #SBATCH --output=translate_%j.out
 #SBATCH --error=translate_%j.err
-#SBATCH --nodes=1
-#SBATCH --ntasks-per-node=2
-#SBATCH --cpus-per-task=6
+#SBATCH --nodes=2
+#SBATCH --ntasks-per-node=5
+#SBATCH --cpus-per-task=2
 #SBATCH --exclude=g0001
 #SBATCH --partition=dev
-#SBATCH --gres=gpu:1
+#SBATCH --gres=gpu:8
 #SBATCH --export=ALL
 
 srun translate.sh

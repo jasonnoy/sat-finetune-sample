@@ -41,7 +41,7 @@ echo ${main_dir}
 gpt_options=" \
        --batch_size 1 \
        --max_length 300 \
-       --num_workers 6 \
+       --num_workers 2 \
 "
 
 python scripts/translate_coyo.py ${gpt_options} --world_size $WORLD_SIZE --rank $RANK --master_addr $MASTER_ADDR --master_port $MASTER_PORT --local_rank $LOCAL_RANK

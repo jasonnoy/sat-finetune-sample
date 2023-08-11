@@ -126,7 +126,7 @@ if __name__ == "__main__":
         fp16=True,
         skip_init=True,
         use_gpu_initialization=True,
-        device=f"cuda:{args.local_rank // 2}"
+        device=f"cuda:{args.local_rank // 5}"
     ))
     model = model.eval()
     model.add_mixin('auto-regressive', CachedAutoregressiveMixin())
