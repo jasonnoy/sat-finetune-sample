@@ -70,9 +70,7 @@ def infer(inputs, model, tokenizer, num_beams=1, top_p=0.7, temperature=0.95, ba
             batch_size=1,
             strategy=strategy
         )[0]
-        print("output:", output)
-        response = tokenizer.decode(output)
-        print(response)
+        response = tokenizer.decode(output.tolist())
         output_list.append(response)
 
     return output_list
