@@ -9,16 +9,17 @@ module load cuda/11.7
 
 WORLD_SIZE=${SLURM_NTASKS:-1}
 RANK=${SLURM_PROCID:-0}
+LOCAL_RANK=${SLURM_LOCALID:-0}
+
 # MASTER_ADDR is the first in SLURM_NODELIST
 if [ -z "$SLURM_NODELIST" ]; then
     export MASTER_ADDR=localhost
     export MASTER_PORT=7878
 else
     export MASTER_ADDR=`scontrol show hostnames $SLURM_NODELIST | head -n 1`
-    export MASTER_PORT=$(expr 10000 + $(echo -n $SLURM_JOBID | tail -c 4))
+    export MASTER_PORT=$(expr 10000 + $(echo -n $SLURM_JOBID | tail -c 4) + $RANK)
 fi
 # generate a port at random
-LOCAL_RANK=${SLURM_LOCALID:-0}
 
 echo "RUN on `hostname`, CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES"
 export NCCL_IB_DISABLE=0

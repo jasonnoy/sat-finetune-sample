@@ -70,9 +70,9 @@ def infer(seqs, model, tokenizer, num_beams=1, top_p=0.7, temperature=0.95):
             model, seq,
             batch_size=1,
             strategy=strategy
-        ).cpu()[0]
+        )[0]
 
-        response = tokenizer.decode(output[0])
+        response = tokenizer.decode(output[0].cpu())
         response = response.split("\n\n答：")[1]
         outputs.append(response)
 
