@@ -90,6 +90,7 @@ if __name__ == "__main__":
     parser.add_argument('--master_port', type=int, default=7878)
     os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'max_split_size_mb:128'
     os.environ['TOKENIZERS_PARALLELISM'] = 'false'
+    torch.multiprocessing.set_start_method('spawn', force=True)
     args = parser.parse_args()
 
     # load model
