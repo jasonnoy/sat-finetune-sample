@@ -2,7 +2,7 @@
 #SBATCH --job-name=translate_COYO
 #SBATCH --output=translate_%j.out
 #SBATCH --error=translate_%j.err
-#SBATCH --nodes=2
+#SBATCH --nodes=1
 #SBATCH --ntasks-per-node=10
 #SBATCH --cpus-per-task=2
 #SBATCH --exclude=g0001
