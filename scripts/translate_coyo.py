@@ -21,7 +21,7 @@ class CoyoDataset(Dataset):
 
         with open(path, 'r', encoding='utf-8') as f:
             for line in f:
-                data = json.loads(line)
+                data = dict(json.loads(line))
                 self.original_datas.append(data)
                 self.caption_prompts.append(f"[Round 0]\n\n问：{data['caption']}\n\n答：")
 
@@ -33,8 +33,6 @@ class CoyoDataset(Dataset):
         caption_prompt = self.caption_prompts[idx]
         caption_tensor = self.tokenizer(caption_prompt, return_tensors="pt").to(self.device)['input_ids'][0]
         caption_tensor = torch.cat([caption_tensor, torch.tensor([-1] * (self.max_length - len(caption_tensor)), device=caption_tensor.device)], dim=0)
-        print(data)
-        print(caption_tensor)
         return data, caption_tensor
 
 
@@ -113,6 +111,7 @@ if __name__ == "__main__":
     dataset = CoyoDataset(meta_path, tokenizer, max_length=args.max_length, device=model.parameters().__next__().device)
     dataloader = DataLoader(dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers)
     for batch in tqdm(dataloader):
+        print("batch:", batch)
         datas = batch[0]
         inputs = batch[1]
         outputs = infer(inputs, model, tokenizer, num_beams=args.num_beams, top_p=args.top_p, temperature=args.temperature)
