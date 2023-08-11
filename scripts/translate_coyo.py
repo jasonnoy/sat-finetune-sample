@@ -153,6 +153,7 @@ if __name__ == "__main__":
 
         dataset = CoyoDataset(input_meta_path, tokenizer, max_length=args.max_length, device=model.parameters().__next__().device)
         dataloader = DataLoader(dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers)
+        print("rank {}, device: {}".format(args.rank, model.parameters().__next__().device))
 
         total_outputs = []
         for batch in tqdm(dataloader):
