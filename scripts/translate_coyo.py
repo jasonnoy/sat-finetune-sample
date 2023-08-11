@@ -66,7 +66,7 @@ def infer(inputs, model, tokenizer, num_beams=1, top_p=0.7, temperature=0.95, ba
     output_list = []
     for seq in inputs:
         output = filling_sequence(
-            seq, input,
+            model, seq,
             batch_size=1,
             strategy=strategy
         )
