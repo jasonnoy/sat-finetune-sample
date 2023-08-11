@@ -141,8 +141,9 @@ if __name__ == "__main__":
 
     for idx in select_ids:
         print("rank {} processing {}...".format(args.rank, idx))
-        dir_id = idx[:3]
-        dir_name = f"part-00{dir_id}"
+        dir_id = idx[:-5]
+        dir_name = "part-00000"[:-len(dir_id)]
+        dir_name += dir_id
         input_dir_path = os.path.join(input_path, dir_name)
         output_dir_path = os.path.join(output_path, dir_name)
         os.makedirs(output_dir_path, exist_ok=True)
