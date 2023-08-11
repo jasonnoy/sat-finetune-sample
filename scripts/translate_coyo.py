@@ -61,26 +61,22 @@ def chat(query, model, tokenizer,
     print(response)
 
 
-def infer(inputs, model, tokenizer, num_beams=1, top_p=0.7, temperature=0.95, batch_size=16):
+def infer(seqs, model, tokenizer, num_beams=1, top_p=0.7, temperature=0.95):
     strategy = BeamSearchStrategy(temperature=temperature, top_p=top_p, top_k=0, end_tokens=[tokenizer.eos_token_id],
                                   num_beams=num_beams, consider_end=True)
-    output_list = []
-    logits, *prevs = model(inputs)
-    tokens = torch.argmax(logits.cpu(), dim=-1)
-    # for seq in inputs:
-    #     output = filling_sequence(
-    #         model, seq,
-    #         batch_size=1,
-    #         strategy=strategy
-    #     )[0]
+    outputs = []
+    for seq in seqs:
+        output = filling_sequence(
+            model, seq,
+            batch_size=1,
+            strategy=strategy
+        ).cpu()[0]
 
-    for output in tokens:
-        response = tokenizer.decode(output)
-        print(response)
+        response = tokenizer.decode(output[0])
         response = response.split("\n\n答：")[1]
-        output_list.append(response)
+        outputs.append(response)
 
-    return output_list
+    return outputs
 
 
 def split_list_by_n(origin_list, n):
@@ -133,10 +129,9 @@ if __name__ == "__main__":
         device=f"cuda:{args.local_rank}"
     ))
     model = model.eval()
+    model.add_mixin('auto-regressive', CachedAutoregressiveMixin())
 
     tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True)
-    
-    model.add_mixin('auto-regressive', CachedAutoregressiveMixin())
 
     input_path = "/nxchinamobile2/shared/img_datasets/cleaned_imgs_data/coyo_700m_merged"
     output_path = "/nxchinamobile2/shared/jjh/coyo_700m_merged_translate"
@@ -161,7 +156,6 @@ if __name__ == "__main__":
         total_outputs = []
         for batch in tqdm(dataloader):
             outputs = infer(batch, model, tokenizer, num_beams=args.num_beams, top_p=args.top_p, temperature=args.temperature)
-            print(outputs)
             total_outputs.extend(outputs)
 
         with open(output_meta_path, "w", encoding='utf-8') as f:
