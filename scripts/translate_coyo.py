@@ -118,4 +118,3 @@ if __name__ == "__main__":
         inputs = batch[1]
         outputs = infer(inputs, model, tokenizer, num_beams=args.num_beams, top_p=args.top_p, temperature=args.temperature)
         print(outputs)
-        break
