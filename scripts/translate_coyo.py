@@ -11,12 +11,13 @@ import json
 
 
 class CoyoDataset(Dataset):
-    def __init__(self, path, tokenizer, max_length: int = 256):
+    def __init__(self, path, tokenizer, device, max_length: int = 256):
         self.path = path
         self.tokenizer = tokenizer
         self.original_datas = []
         self.caption_prompts = []
         self.max_length = max_length
+        self.device = device
 
         with open(path, 'r', encoding='utf-8') as f:
             for line in f:
@@ -30,7 +31,7 @@ class CoyoDataset(Dataset):
     def __getitem__(self, idx):
         datas = self.original_datas[idx]
         caption_prompts = self.caption_prompts[idx]
-        caption_tensors = self.tokenizer(caption_prompts, return_tensors="pt").to(model.parameters().__next__().device)['input_ids']
+        caption_tensors = self.tokenizer(caption_prompts, return_tensors="pt").to(self.device)['input_ids']
         caption_tensors = torch.cat(
             [caption_tensors, torch.tensor([-1] * (self.max_length - caption_tensors.shape[-1]), device=caption_tensors.device)], dim=0
         )
@@ -100,6 +101,7 @@ if __name__ == "__main__":
         fp16=True,
         skip_init=True,
         use_gpu_initialization=True,
+        device=f"cuda:{args.local_rank}"
     ))
     model = model.eval()
 
@@ -108,7 +110,7 @@ if __name__ == "__main__":
     model.add_mixin('auto-regressive', CachedAutoregressiveMixin())
 
     meta_path = "/nxchinamobile2/shared/img_datasets/cleaned_imgs_data/coyo_700m_merged/part-00000/000000.meta.jsonl"
-    dataset = CoyoDataset(meta_path, tokenizer, max_length=args.max_length)
+    dataset = CoyoDataset(meta_path, tokenizer, max_length=args.max_length, device=model.parameters().__next__().device)
     dataloader = DataLoader(dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers)
     for batch in tqdm(dataloader):
         datas = batch[0]
