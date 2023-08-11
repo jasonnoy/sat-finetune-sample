@@ -75,8 +75,8 @@ def infer(inputs, model, tokenizer, num_beams=1, top_p=0.7, temperature=0.95, ba
     #     )[0]
 
     for output in tokens:
-        print(output)
-        response = tokenizer.decode(output[0])
+        response = tokenizer.decode(output)
+        print(response)
         response = response.split("\n\n答：")[1]
         output_list.append(response)
 
