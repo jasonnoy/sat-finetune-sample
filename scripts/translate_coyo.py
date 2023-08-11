@@ -66,8 +66,7 @@ def infer(inputs, model, tokenizer, num_beams=1, top_p=0.7, temperature=0.95, ba
                                   num_beams=num_beams, consider_end=True)
     output_list = []
     logits, *prevs = model(inputs)
-    print("logits.shape:",logits.shape)
-    print("inputs shape:", inputs.shape)
+    tokens = torch.argmax(logits.cpu(), dim=-1)
     # for seq in inputs:
     #     output = filling_sequence(
     #         model, seq,
@@ -75,9 +74,9 @@ def infer(inputs, model, tokenizer, num_beams=1, top_p=0.7, temperature=0.95, ba
     #         strategy=strategy
     #     )[0]
 
-    for output in outputs:
+    for output in tokens:
         print(output)
-        response = tokenizer.decode(output.cpu()[0])
+        response = tokenizer.decode(output[0])
         response = response.split("\n\n答：")[1]
         output_list.append(response)
 
