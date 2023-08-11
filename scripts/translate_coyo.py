@@ -133,8 +133,8 @@ if __name__ == "__main__":
     
     model.add_mixin('auto-regressive', CachedAutoregressiveMixin())
 
-    input_path = "/nxchinamobile2/shared/img_datasets/laion115m"
-    output_path = "/nxchinamobile2/shared/jjh/laion115m-new"
+    input_path = "/nxchinamobile2/shared/img_datasets/cleaned_imgs_data/coyo_700m_merged"
+    output_path = "/nxchinamobile2/shared/jjh/coyo_700m_merged_translate"
     all_ids = get_all_ids_under_dir(input_path)
     divided_ids = split_list_by_n(all_ids, args.world_size)
     select_ids = divided_ids[args.rank]
