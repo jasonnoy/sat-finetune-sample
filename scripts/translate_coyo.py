@@ -66,7 +66,6 @@ def infer(inputs, model, tokenizer, num_beams=1, top_p=0.7, temperature=0.95, ba
     #                               num_beams=num_beams, consider_end=True)
     output_list = []
     outputs = model(inputs)
-    print("outputs:", outputs)
     # for seq in inputs:
     #     output = filling_sequence(
     #         model, seq,
@@ -74,7 +73,7 @@ def infer(inputs, model, tokenizer, num_beams=1, top_p=0.7, temperature=0.95, ba
     #         strategy=strategy
     #     )[0]
     for output in outputs:
-        response = tokenizer.decode(output.cpu())
+        response = tokenizer.decode(output.cpu()[0])
         response = response.split("\n\n答：")[1]
         output_list.append(response)
 
@@ -159,6 +158,7 @@ if __name__ == "__main__":
         total_outputs = []
         for batch in tqdm(dataloader):
             outputs = infer(batch, model, tokenizer, num_beams=args.num_beams, top_p=args.top_p, temperature=args.temperature)
+            print(outputs)
             total_outputs.extend(outputs)
 
         with open(output_meta_path, "w", encoding='utf-8') as f:
