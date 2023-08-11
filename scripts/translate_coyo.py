@@ -33,6 +33,8 @@ class CoyoDataset(Dataset):
         caption_prompt = self.caption_prompts[idx]
         caption_tensor = self.tokenizer(caption_prompt, return_tensors="pt").to(self.device)['input_ids'][0]
         caption_tensor = torch.cat([caption_tensor, torch.tensor([-1] * (self.max_length - len(caption_tensor)), device=caption_tensor.device)], dim=0)
+        print(data)
+        print(caption_tensor)
         return data, caption_tensor
 
 
