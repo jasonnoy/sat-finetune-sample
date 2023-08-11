@@ -34,7 +34,7 @@ class CoyoDataset(Dataset):
         caption_tensors = self.tokenizer(caption_prompts, return_tensors="pt").to(self.device)['input_ids']
         padded_tensors = []
         for ct in caption_tensors:
-            padded_tensors.append(torch.cat([ct, torch.tensor(self.max_length - ct.shape[-1], device=ct.device)], dim=0))
+            padded_tensors.append(torch.cat([ct, torch.tensor([-1] * (self.max_length - ct.shape[-1]), device=ct.device)], dim=0))
         padded_tensors = torch.stack(padded_tensors)
         return datas, padded_tensors
 
