@@ -120,6 +120,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # load model
+    print("rank {}, local rank".format(args.rank), args.local_rank)
     model, model_args = ChatGLM2Model.from_pretrained('/nxchinamobile2/shared/jjh/projects/sat-finetune-sample/checkpoints/en_to_zh',
     args=argparse.Namespace(
         mode='inference',
