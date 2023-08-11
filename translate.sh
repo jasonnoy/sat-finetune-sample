@@ -38,7 +38,7 @@ main_dir=$(dirname $script_dir)
 echo ${main_dir}
 
 gpt_options=" \
-       --batch_size 80 \
+       --batch_size 16 \
        --max_length 300 \
        --num_workers 6 \
 "
