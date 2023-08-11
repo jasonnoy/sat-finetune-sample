@@ -36,6 +36,8 @@ class CoyoDataset(Dataset):
         for ct in caption_tensors:
             padded_tensors.append(torch.cat([ct, torch.tensor([-1] * (self.max_length - ct.shape[-1]), device=ct.device)], dim=0))
         padded_tensors = torch.stack(padded_tensors)
+        print(datas)
+        print(padded_tensors)
         return datas, padded_tensors
 
 
