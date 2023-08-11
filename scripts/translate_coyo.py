@@ -29,15 +29,11 @@ class CoyoDataset(Dataset):
         return len(self.original_datas)
 
     def __getitem__(self, idx):
-        datas = self.original_datas[idx]
-        caption_prompts = self.caption_prompts[idx]
-        caption_tensors = self.tokenizer(caption_prompts, return_tensors="pt").to(self.device)['input_ids']
-        caption_tensors = torch.cat([caption_tensors, torch.tensor([-1] * (self.max_length - caption_tensors.shape[-1]), device=caption_tensors.device)], dim=0)
-        # padded_tensors = []
-        # for ct in caption_tensors:
-        #     padded_tensors.append(torch.cat([ct, torch.tensor([-1] * (self.max_length - ct.shape[-1]), device=ct.device)], dim=0))
-        # padded_tensors = torch.stack(padded_tensors)
-        return datas, caption_tensors
+        data = self.original_datas[idx]
+        caption_prompt = self.caption_prompts[idx]
+        caption_tensor = self.tokenizer(caption_prompt, return_tensors="pt").to(self.device)['input_ids'][0]
+        caption_tensor = torch.cat([caption_tensor, torch.tensor([-1] * (self.max_length - len(caption_tensor)), device=caption_tensor.device)], dim=0)
+        return data, caption_tensor
 
 
 def chat(query, model, tokenizer, 
