@@ -3,7 +3,7 @@
 #SBATCH --output=translate_%j.out
 #SBATCH --error=translate_%j.err
 #SBATCH --nodes=2
-#SBATCH --ntasks-per-node=5
+#SBATCH --ntasks-per-node=40
 #SBATCH --cpus-per-task=2
 #SBATCH --exclude=g0001
 #SBATCH --partition=dev
