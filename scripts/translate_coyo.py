@@ -8,6 +8,7 @@ from sat.model.official import ChatGLM2Model
 from tqdm import tqdm
 from torch.utils.data import DataLoader, Dataset
 import json
+import math
 
 
 class CoyoDataset(Dataset):
@@ -71,9 +72,30 @@ def infer(inputs, model, tokenizer, num_beams=1, top_p=0.7, temperature=0.95, ba
             strategy=strategy
         )[0]
         response = tokenizer.decode(output[0].cpu())
+        response = response.split("\n\n答：")[1]
         output_list.append(response)
 
     return output_list
+
+
+def split_list_by_n(origin_list, n):
+    step = math.ceil(len(origin_list) / n)
+    res = []
+    for i in range(0, len(origin_list), step):
+        res.append(origin_list[i:i + step])
+    return res
+
+
+def get_all_ids_under_dir(path):
+    dirs = os.listdir(path)
+    ids = []
+    for d in dirs:
+        dir_path = os.path.join(path, d)
+        all_files = os.listdir(dir_path)
+        all_files = [f.split(sep='.')[0] for f in all_files if f.endswith(".jsonl")]
+        ids.extend(all_files)
+    ids.sort()
+    return ids
 
 
 if __name__ == "__main__":
@@ -111,9 +133,33 @@ if __name__ == "__main__":
     
     model.add_mixin('auto-regressive', CachedAutoregressiveMixin())
 
-    meta_path = "/nxchinamobile2/shared/img_datasets/cleaned_imgs_data/coyo_700m_merged/part-00000/000000.meta.jsonl"
-    dataset = CoyoDataset(meta_path, tokenizer, max_length=args.max_length, device=model.parameters().__next__().device)
-    dataloader = DataLoader(dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers)
-    for batch in tqdm(dataloader):
-        outputs = infer(batch, model, tokenizer, num_beams=args.num_beams, top_p=args.top_p, temperature=args.temperature)
-        print(outputs)
+    input_path = "/nxchinamobile2/shared/img_datasets/laion115m"
+    output_path = "/nxchinamobile2/shared/jjh/laion115m-new"
+    all_ids = get_all_ids_under_dir(input_path)
+    divided_ids = split_list_by_n(all_ids, args.world_size)
+    select_ids = divided_ids[args.rank]
+
+    for idx in select_ids:
+        print("rank {} processing {}...".format(args.rank, idx))
+        dir_id = idx[:3]
+        dir_name = f"part-00{dir_id}"
+        input_dir_path = os.path.join(input_path, dir_name)
+        output_dir_path = os.path.join(output_path, dir_name)
+        os.makedirs(output_dir_path, exist_ok=True)
+        meta_filename = f"{idx}.meta.jsonl"
+        input_meta_path = os.path.join(input_dir_path, meta_filename)
+        output_meta_path = os.path.join(output_dir_path, meta_filename)
+
+        dataset = CoyoDataset(input_meta_path, tokenizer, max_length=args.max_length, device=model.parameters().__next__().device)
+        dataloader = DataLoader(dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers)
+
+        total_outputs = []
+        for batch in tqdm(dataloader):
+            outputs = infer(batch, model, tokenizer, num_beams=args.num_beams, top_p=args.top_p, temperature=args.temperature)
+            total_outputs.extend(outputs)
+
+        with open(output_meta_path, "w", encoding='utf-8') as f:
+            for data, output in zip(dataset.get_origincal_datas(), total_outputs):
+                data['caption_zh'] = output
+                f.write(json.dumps(data, ensure_ascii=False) + "\n")
+        f.close()
