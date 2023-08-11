@@ -93,7 +93,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # load model
-    model, model_args = ChatGLM2Model.from_pretrained('/nxchinamobile2/shared/jjh/projects/sat-finetune-sample/checkpoints/finetune-chatglm2-6b-08-07-19-39',
+    model, model_args = ChatGLM2Model.from_pretrained('/nxchinamobile2/shared/jjh/projects/sat-finetune-sample/checkpoints/en_to_zh',
     args=argparse.Namespace(
         mode='inference',
         fp16=True,
