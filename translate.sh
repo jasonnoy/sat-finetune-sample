@@ -7,8 +7,8 @@
 # if SLURM defined, set by SLURM environment
 module load cuda/11.7
 
-export WORLD_SIZE=${SLURM_NTASKS:-1}
-export RANK=${SLURM_PROCID:-0}
+WORLD_SIZE=${SLURM_NTASKS:-1}
+RANK=${SLURM_PROCID:-0}
 # MASTER_ADDR is the first in SLURM_NODELIST
 if [ -z "$SLURM_NODELIST" ]; then
     export MASTER_ADDR=localhost
@@ -18,7 +18,7 @@ else
     export MASTER_PORT=$(expr 10000 + $(echo -n $SLURM_JOBID | tail -c 4))
 fi
 # generate a port at random
-export LOCAL_RANK=${SLURM_LOCALID:-0}
+LOCAL_RANK=${SLURM_LOCALID:-0}
 
 echo "RUN on `hostname`, CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES"
 export NCCL_IB_DISABLE=0
@@ -37,31 +37,10 @@ main_dir=$(dirname $script_dir)
 
 echo ${main_dir}
 
-train_data="/nxchinamobile2/shared/jjh/projects/sat-finetune-sample/mix_combine_zh.jsonl"
 gpt_options=" \
-       --experiment-name finetune-chatglm2-6b \
-       --model-parallel-size 1 \
-       --mode finetune \
-       --train-iters 1000 \
-       --resume-dataloader \
-       --max_source_length 300 \
-       --max_target_length 300 \
-       --train-data ${train_data} \
-       --distributed-backend nccl \
-       --lr-decay-style cosine \
-       --warmup .02 \
-       --save-interval 100 \
-       --eval-interval 100 \
-       --save ./checkpoints \
-       --split 98,1,1 \
-       --eval-iters 1 \
-       --eval-batch-size 8 \
-       --zero-stage 1 \
-       --lr 0.00004 \
-       --batch-size 12 \
-       --skip-init \
-       --fp16 \
-       --block-size 128
+       --batch-size 16 \
+       --max_length 1024 \
+       --num_workers 4 \
 "
-  
-python scripts/finetune_chatglm2.py ${gpt_options} --local_rank $LOCAL_RANK
+
+python scripts/translate_coyo.py ${gpt_options} --world_size $WORLD_SIZE --rank $RANK --master_addr $MASTER_ADDR --master_port $MASTER_PORT --local_rank $LOCAL_RANK

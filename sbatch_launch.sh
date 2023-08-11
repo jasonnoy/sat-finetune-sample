@@ -1,13 +1,14 @@
 #!/bin/bash
-#SBATCH --output=ftcleaner_%j.out
-#SBATCH --error=ftcleaner_%j.err
-#SBATCH --nodes=4
-#SBATCH --ntasks-per-node=8
-#SBATCH --cpus-per-task=8
+#SBATCH --job-name=translate_COYO
+#SBATCH --output=translate_%j.out
+#SBATCH --error=translate_%j.err
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=4
 #SBATCH --partition=dev
-#SBATCH --gres=gpu:8
+#SBATCH --gres=gpu:1
 #SBATCH --export=ALL
 
-srun train.sh 
+srun translate.sh
 echo "Done with job $SLURM_JOB_ID"
 

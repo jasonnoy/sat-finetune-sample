@@ -9,11 +9,6 @@ from sat.model.finetune.lora2 import LoraMixin
 from tqdm import tqdm
 
 
-class FineTuneModel(ChatGLM2Model):
-    def __init__(self, args, transformer=None, parallel_output=True, **kw_args):
-        super().__init__(args, transformer=transformer, parallel_output=parallel_output, **kw_args)
-        self.add_mixin("lora", LoraMixin(args.num_layers, 10), reinit=True)
-
 def chat(query, model, tokenizer, 
         max_length: int = 256, num_beams=1, top_p=0.7, top_k=0, temperature=0.95):
     prompt = f"[Round 0]\n\n问：{query}\n\n答："
@@ -29,10 +24,7 @@ def chat(query, model, tokenizer,
         batch_size=1,
         strategy=strategy
     )[0] # drop memory
-    
-    # ---------------
-    # port from inference_glm.py, more general than chat mode
-    # clip -1s and fill back generated things into seq
+
     output_list = list(output)
 
     response = tokenizer.decode(output_list[0])
