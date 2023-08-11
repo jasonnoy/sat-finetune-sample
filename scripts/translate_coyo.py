@@ -29,11 +29,13 @@ class CoyoDataset(Dataset):
         return len(self.original_datas)
 
     def __getitem__(self, idx):
-        data = self.original_datas[idx]
         caption_prompt = self.caption_prompts[idx]
         caption_tensor = self.tokenizer(caption_prompt, return_tensors="pt").to(self.device)['input_ids'][0]
         caption_tensor = torch.cat([caption_tensor, torch.tensor([-1] * (self.max_length - len(caption_tensor)), device=caption_tensor.device)], dim=0)
-        return data, caption_tensor
+        return caption_tensor
+
+    def get_origincal_datas(self):
+        return self.original_datas
 
 
 def chat(query, model, tokenizer, 
@@ -111,8 +113,5 @@ if __name__ == "__main__":
     dataset = CoyoDataset(meta_path, tokenizer, max_length=args.max_length, device=model.parameters().__next__().device)
     dataloader = DataLoader(dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers)
     for batch in tqdm(dataloader):
-        print("batch:", batch)
-        datas = batch[0]
-        inputs = batch[1]
-        outputs = infer(inputs, model, tokenizer, num_beams=args.num_beams, top_p=args.top_p, temperature=args.temperature)
+        outputs = infer(batch, model, tokenizer, num_beams=args.num_beams, top_p=args.top_p, temperature=args.temperature)
         print(outputs)
