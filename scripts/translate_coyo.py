@@ -62,17 +62,19 @@ def chat(query, model, tokenizer,
 
 
 def infer(inputs, model, tokenizer, num_beams=1, top_p=0.7, temperature=0.95, batch_size=16):
-    # strategy = BeamSearchStrategy(temperature=temperature, top_p=top_p, top_k=0, end_tokens=[tokenizer.eos_token_id],
-    #                               num_beams=num_beams, consider_end=True)
+    strategy = BeamSearchStrategy(temperature=temperature, top_p=top_p, top_k=0, end_tokens=[tokenizer.eos_token_id],
+                                  num_beams=num_beams, consider_end=True)
     output_list = []
-    outputs = model(inputs)
+    logits, *prevs = model(inputs)
+    print("logits.shape:",logits.shape)
+    print("inputs shape:", inputs.shape)
     # for seq in inputs:
     #     output = filling_sequence(
     #         model, seq,
     #         batch_size=1,
     #         strategy=strategy
     #     )[0]
-    print(outputs[0])
+
     for output in outputs:
         print(output)
         response = tokenizer.decode(output.cpu()[0])
