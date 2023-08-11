@@ -120,17 +120,17 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # load model
-    print("rank {}, local rank".format(args.rank), args.local_rank)
     model, model_args = ChatGLM2Model.from_pretrained('/nxchinamobile2/shared/jjh/projects/sat-finetune-sample/checkpoints/en_to_zh',
     args=argparse.Namespace(
         mode='inference',
         fp16=True,
         skip_init=True,
         use_gpu_initialization=True,
-        device=f"cuda:{args.local_rank}"
+        device=f"cuda:{args.local_rank // 2}"
     ))
     model = model.eval()
     model.add_mixin('auto-regressive', CachedAutoregressiveMixin())
+    print("rank {}, device: {}".format(args.rank, model.parameters().__next__().device))
 
     tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True)
 
@@ -154,7 +154,6 @@ if __name__ == "__main__":
 
         dataset = CoyoDataset(input_meta_path, tokenizer, max_length=args.max_length, device=model.parameters().__next__().device)
         dataloader = DataLoader(dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers)
-        print("rank {}, device: {}".format(args.rank, model.parameters().__next__().device))
 
         total_outputs = []
         for batch in tqdm(dataloader):
